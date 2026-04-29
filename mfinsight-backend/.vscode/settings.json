@@ -1,0 +1,21 @@
+{
+  "java.jdt.ls.java.home": "${env:JAVA_HOME}",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.maven.enabled": true,
+  "java.import.gradle.enabled": false,
+  "java.import.exclusions": [
+    "**/target/**",
+    "**/node_modules/**",
+    "**/.metadata/**",
+    "**/.idea/**"
+  ],
+  "files.exclude": {
+    "**/target": true
+  },
+  "search.exclude": {
+    "**/target": true
+  },
+  "files.watcherExclude": {
+    "**/target/**": true
+  }
+}
