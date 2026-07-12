@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Risk Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="app-shell">
+        <section class="panel">
+            <div class="heading">
+                <p class="eyebrow">Machine Learning Early Warning System</p>
+                <h1>Flood Risk Prediction</h1>
+                <p class="summary">
+                    Enter current rainfall, visibility, river, and seasonal readings to classify regional flood risk.
+                </p>
+            </div>
+
+            <form method="post" class="prediction-form">
+                <div class="grid">
+                    <label>
+                        District
+                        <select name="district">
+                            {% for district in districts %}
+                                <option value="{{ district }}" {% if values.district == district %}selected{% endif %}>{{ district }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Season
+                        <select name="season">
+                            {% for season in seasons %}
+                                <option value="{{ season }}" {% if values.season == season %}selected{% endif %}>{{ season.replace('_', ' ').title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+
+                    <label>
+                        Annual Rainfall (mm)
+                        <input type="number" step="0.1" name="annual_rainfall_mm" value="{{ values.annual_rainfall_mm }}" required>
+                    </label>
+
+                    <label>
+                        Monsoon Rainfall (mm)
+                        <input type="number" step="0.1" name="monsoon_rainfall_mm" value="{{ values.monsoon_rainfall_mm }}" required>
+                    </label>
+
+                    <label>
+                        Rainfall Last 24h (mm)
+                        <input type="number" step="0.1" name="rainfall_24h_mm" value="{{ values.rainfall_24h_mm }}" required>
+                    </label>
+
+                    <label>
+                        Rainfall Last 7d (mm)
+                        <input type="number" step="0.1" name="rainfall_7d_mm" value="{{ values.rainfall_7d_mm }}" required>
+                    </label>
+
+                    <label>
+                        Cloud Visibility (km)
+                        <input type="number" step="0.1" name="cloud_visibility_km" value="{{ values.cloud_visibility_km }}" required>
+                    </label>
+
+                    <label>
+                        River Level (m)
+                        <input type="number" step="0.01" name="river_level_m" value="{{ values.river_level_m }}" required>
+                    </label>
+
+                    <label>
+                        Humidity (%)
+                        <input type="number" step="0.1" name="humidity_percent" value="{{ values.humidity_percent }}" required>
+                    </label>
+
+                    <label>
+                        Soil Moisture (%)
+                        <input type="number" step="0.1" name="soil_moisture_percent" value="{{ values.soil_moisture_percent }}" required>
+                    </label>
+
+                    <label>
+                        Temperature (C)
+                        <input type="number" step="0.1" name="temperature_c" value="{{ values.temperature_c }}" required>
+                    </label>
+                </div>
+
+                <button type="submit">Predict Flood Risk</button>
+            </form>
+        </section>
+
+        <aside class="result-panel">
+            {% if result %}
+                <p class="eyebrow">Prediction Result</p>
+                <h2 class="{% if result.prediction %}danger{% else %}safe{% endif %}">{{ result.risk_label }}</h2>
+                <div class="meter">
+                    <span style="width: {{ result.probability }}%"></span>
+                </div>
+                <p class="probability">{{ result.probability }}% flood probability</p>
+                <dl>
+                    <div>
+                        <dt>Model</dt>
+                        <dd>{{ result.model_name }}</dd>
+                    </div>
+                    <div>
+                        <dt>Test Accuracy</dt>
+                        <dd>{{ result.accuracy }}%</dd>
+                    </div>
+                </dl>
+            {% elif error %}
+                <p class="eyebrow">Setup Needed</p>
+                <h2 class="danger">Model Not Ready</h2>
+                <p>{{ error }}</p>
+            {% else %}
+                <p class="eyebrow">Monitoring View</p>
+                <h2>Ready for Regional Inputs</h2>
+                <p>
+                    Submit the weather readings to receive an instant flood classification for evacuation planning
+                    and resource allocation.
+                </p>
+            {% endif %}
+        </aside>
+    </main>
+</body>
+</html>
